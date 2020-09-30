@@ -3,6 +3,7 @@ import os
 from flask import Flask
 
 
+
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
@@ -26,9 +27,7 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    @app.route("/hello")
-    def hello():
-        return "Hello, World!"
+    app.config["MONGO_URI"] = "mongodb://localhost:27017/minesweeperdb"
 
 
 

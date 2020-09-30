@@ -1,4 +1,6 @@
 from flask import Blueprint
+from minesweeper.db import get_db
+
 
 bp = Blueprint("users", __name__, url_prefix="/users")
 
@@ -9,7 +11,8 @@ def get_users():
     List existing users
     :return: List of registered users
     """
-    print()
+    db = get_db()
+    print(db.users.find())
     return "NOT IMPLEMENTED"
 
 
