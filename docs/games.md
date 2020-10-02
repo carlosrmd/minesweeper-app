@@ -119,9 +119,9 @@ body only if status is FINISHED.
 }
 ```
 
-### POST /games/:game_id/:command
+### PUT /games/:game_id/:command
 
-Endpoint to interact with existing game. User could make a move, pause or resume the game.
+Endpoint to interact with existing game. User could make a move, pause or resume the game. This endpoint changes current state of existing active game.
 
 **Path params**
 
