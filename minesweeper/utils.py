@@ -55,11 +55,11 @@ def generate_board(rows: int, columns: int, mines: int):
         for neighbor_r, neighbor_c in get_valid_neighbors(r, c, rows, columns):
             if isinstance(board[neighbor_r][neighbor_c], int):
                 board[neighbor_r][neighbor_c] += 1
-    return board
+    return list(map(lambda x: list(map(lambda y: str(y), x)), board))
 
 
 def generate_empty_board(rows: int, columns: int):
-    return [["0" for _ in range(columns)] for _ in range(rows)]
+    return [["*" for _ in range(columns)] for _ in range(rows)]
 
 
 def board_pretty_printer(board):
