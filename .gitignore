@@ -4,6 +4,7 @@ __pycache__/
 instance/
 
 .pytest_cache/
+.idea/
 .coverage
 htmlcov/
 
