@@ -27,3 +27,5 @@ MSG_MISSING_FIELDS = "Error: missing required fields."
 MSG_GAME_NOT_FOUND = "Error: game not found."
 MSG_COMMAND_UNRECOGNIZED = "Error: command unrecognized."
 MSG_USER_ALREADY_EXISTS = "Error: user name already exists."
+
+DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S.%f'
