@@ -1,6 +1,7 @@
 from minesweeper.utils import get_valid_neighbors, board_pretty_printer
-from minesweeper.constants import RESULT_GAME_LOST, RESULT_GAME_VICTORY, STATUS_FINISHED
+from minesweeper.constants import RESULT_GAME_LOST, RESULT_GAME_VICTORY, STATUS_FINISHED, DATETIME_FORMAT
 from bson import ObjectId
+from datetime import datetime
 
 
 class MinesweeperPlayer:
@@ -14,18 +15,20 @@ class MinesweeperPlayer:
         self._covered_cells_count = None
         self._rows = None
         self._columns = None
+        self._started_at = None
+        self._total_time = None
         self._result = ""
         self._memo = {}
 
     def load_game_from_db(self):
-        json_game = self._db.find_one({"_id": ObjectId(self._game_id)})["board"]
-        print(json_game)
-        self._uncovered_board = json_game["uncovered_board"]
-        self._covered_board = json_game["covered_board"]
-        self._mines_count = json_game["total_mines"]
-        self._covered_cells_count = json_game["covered_cells_count"]
-        self._rows = json_game["total_rows"]
-        self._columns = json_game["total_columns"]
+        json_game = self._db.find_one({"_id": ObjectId(self._game_id)})
+        self._started_at = datetime.strptime(json_game["started_at"], DATETIME_FORMAT)
+        self._uncovered_board = json_game["board"]["uncovered_board"]
+        self._covered_board = json_game["board"]["covered_board"]
+        self._mines_count = json_game["board"]["total_mines"]
+        self._covered_cells_count = json_game["board"]["covered_cells_count"]
+        self._rows = json_game["board"]["total_rows"]
+        self._columns = json_game["board"]["total_columns"]
 
     def save_game_to_db(self):
         update_json = {
@@ -35,6 +38,7 @@ class MinesweeperPlayer:
         if not self._result == "":
             update_json['result'] = self._result
             update_json['status'] = STATUS_FINISHED
+            update_json['total_time'] = self._total_time
         self._db.update_one({'_id': ObjectId(self._game_id)}, {'$set': update_json})
 
     def make_move(self, r, c):
@@ -42,9 +46,11 @@ class MinesweeperPlayer:
         if self._uncovered_board[r][c] == 'X':
             self._covered_board[r][c] = 'X'
             self._result = RESULT_GAME_LOST
+            self._total_time = (datetime.now() - self._started_at).total_seconds()
             return
         self._recursive_uncoverer(r, c)
         if self._covered_cells_count == self._mines_count:
+            self._total_time = (datetime.now() - self._started_at).total_seconds()
             self._result = RESULT_GAME_VICTORY
 
     def _recursive_uncoverer(self, r, c):
