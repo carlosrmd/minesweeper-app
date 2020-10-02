@@ -5,7 +5,8 @@ from minesweeper.db import get_db
 from minesweeper.utils import generate_board, generate_empty_board
 from minesweeper.constants import PAUSE_GAME, RESUME_GAME, END_GAME, MOVE, STATUS_ACTIVE, STATUS_FINISHED,\
     STATUS_PAUSED, RESULT_FINISHED_BY_USER, MOVE_QUESTION_MARK,\
-    MOVE_CLICK, MOVE_RED_FLAG, flag_cell, MSG_COMMAND_UNRECOGNIZED, MSG_GAME_NOT_FOUND, MSG_MISSING_FIELDS
+    MOVE_CLICK, MOVE_RED_FLAG, flag_cell, MSG_COMMAND_UNRECOGNIZED, MSG_GAME_NOT_FOUND, MSG_MISSING_FIELDS,\
+    DATETIME_FORMAT
 from minesweeper.MinesweeperPlayer import MinesweeperPlayer
 from bson import ObjectId
 from bson.errors import InvalidId
@@ -85,6 +86,7 @@ def get_state(game_id):
     }
     if response["status"] == "FINISHED":
         response["result"] = json_game["result"]
+        response["total_time"] = json_game["total_time"]
     return jsonify(response)
 
 
@@ -96,7 +98,7 @@ def game_action(game_id, action):
     :return: new game's state
     """
     db = get_db()
-    current_game = db.games.find_one({"_id": ObjectId(game_id)}, {"status": 1})
+    current_game = db.games.find_one({"_id": ObjectId(game_id)}, {"status": 1, "started_at": 1})
     if current_game is None:
         return jsonify({"msg": MSG_GAME_NOT_FOUND}), 404
     game_status = current_game["status"]
@@ -113,7 +115,11 @@ def game_action(game_id, action):
         if game_status == STATUS_PAUSED or game_status == STATUS_ACTIVE:
             db.games.update_one({"_id": ObjectId(game_id)}, {"$set": {
                 "status": STATUS_FINISHED,
-                "result": RESULT_FINISHED_BY_USER}
+                "result": RESULT_FINISHED_BY_USER,
+                "total_time": (
+                        datetime.now() - datetime.strptime(current_game["started_at"], DATETIME_FORMAT)
+                ).total_seconds()
+            }
             })
 
     elif action == MOVE:
@@ -138,11 +144,17 @@ def game_action(game_id, action):
 
     else:
         return jsonify({"msg": MSG_COMMAND_UNRECOGNIZED}), 400
-    response_game = db.games.find_one({"_id": ObjectId(game_id)}, {"status": 1, "board": 1, "result": 1})
+    response_game = db.games.find_one({"_id": ObjectId(game_id)}, {
+        "status": 1,
+        "board": 1,
+        "result": 1,
+        "total_time": 1
+    })
     response = {
         "board": response_game["board"]["covered_board"],
         "status": response_game["status"]
     }
     if response["status"] == "FINISHED":
         response["result"] = response_game["result"]
+        response["total_time"] = response_game["total_time"]
     return jsonify(response)
