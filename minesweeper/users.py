@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from minesweeper.db import get_db
+from minesweeper.constants import MSG_USER_ALREADY_EXISTS
 from pymongo.errors import DuplicateKeyError
 
 
@@ -32,5 +33,5 @@ def register_users():
     try:
         db.users.insert_one({"user_name": user_name})
     except DuplicateKeyError:
-        return jsonify({"msg": "User name already exists."}), 409
+        return jsonify({"msg": MSG_USER_ALREADY_EXISTS}), 409
     return jsonify({"msg": "Ok"})
