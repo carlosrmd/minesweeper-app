@@ -27,7 +27,7 @@ def get_games():
     if user_name:
         user_filter = {"user_name": user_name}
     result = []
-    for game_found in db.games.find(user_filter):
+    for game_found in db.games.find(user_filter, {"board": 0}):
         game_found["_id"] = str(game_found["_id"])
         result.append(game_found)
     return jsonify(result)
