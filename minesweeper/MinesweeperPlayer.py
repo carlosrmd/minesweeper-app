@@ -33,7 +33,7 @@ class MinesweeperPlayer:
     def save_game_to_db(self):
         update_json = {
             'board.covered_board': self._covered_board,
-            'covered_cells_count': self._covered_cells_count
+            'board.covered_cells_count': self._covered_cells_count
         }
         if not self._result == "":
             update_json['result'] = self._result
@@ -108,6 +108,7 @@ if __name__ == '__main__':
     mp._columns = 16
     mp._result = ""
     mp._memo = {}
+    mp._started_at = datetime.now()
     board_pretty_printer(mp._uncovered_board)
     print("=======================================")
     board_pretty_printer(mp._covered_board)
@@ -148,6 +149,7 @@ if __name__ == '__main__':
     easy_board._columns = 5
     easy_board._result = ""
     easy_board._memo = {}
+    easy_board._started_at = datetime.now()
 
     easy_board._uncovered_board =  [['0','0','0','0','0'],
                                     ['0','1','1','1','0'],
@@ -178,23 +180,35 @@ if __name__ == '__main__':
 
     easy_board = MinesweeperPlayer("", "")
     easy_board._mines_count = 1
-    easy_board._covered_cells_count = 5 * 5
-    easy_board._rows = 5
-    easy_board._columns = 5
+    easy_board._covered_cells_count = 10 * 10
+    easy_board._rows = 10
+    easy_board._columns = 10
     easy_board._result = ""
     easy_board._memo = {}
+    easy_board._started_at = datetime.now()
 
-    easy_board._uncovered_board = [['0', '0', '0', '0', '0'],
-                                   ['0', '1', '1', '1', '0'],
-                                   ['0', '1', 'X', '1', '0'],
-                                   ['0', '1', '1', '1', '0'],
-                                   ['0', '0', '0', '0', '0']]
+    easy_board._uncovered_board = [["0","0","0","0","0","0","0","0","1","1"],
+                                   ["0","0","0","0","0","0","0","0","1","X"],
+                                   ["0","0","0","0","0","0","0","0","1","1"],
+                                   ["0","0","0","0","0","0","0","0","0","0"],
+                                   ["0","0","0","0","0","0","0","0","0","0"],
+                                   ["0","0","0","0","0","0","0","0","0","0"],
+                                   ["0","0","0","0","0","0","0","0","0","0"],
+                                   ["0","0","0","0","0","0","0","0","0","0"],
+                                   ["0","0","0","0","0","0","0","0","0","0"],
+                                   ["0","0","0","0","0","0","0","0","0","0"]]
 
-    easy_board._covered_board = [['*', '*', '*', '*', '*'],
-                                 ['*', '*', '*', '*', '*'],
-                                 ['*', '*', '*', '*', '*'],
-                                 ['*', '*', '*', '*', '*'],
-                                 ['*', '*', '*', '*', '*']]
+    easy_board._covered_board = [['*', '*', '*', '*', '*','*', '*', '*', '*', '*'],
+                                 ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
+                                 ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
+                                 ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
+                                 ['*', '*', '*', '*', '*','*', '*', '*', '*', '*'],
+                                 ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
+                                 ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
+                                 ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
+                                 ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*'],
+                                 ['*', '*', '*', '*', '*', '*', '*', '*', '*', '*']
+                                 ]
 
     print()
     print("=======================================")
@@ -203,10 +217,18 @@ if __name__ == '__main__':
     print("=======================================")
     board_pretty_printer(easy_board._covered_board)
     print("=======================================")
-    print("SELECTING 2, 2")
+    print("SELECTING 0, 0")
     print("=======================================")
-    easy_board.make_move(2, 2)
+    easy_board.make_move(0, 0)
     board_pretty_printer(easy_board._uncovered_board)
     print("=======================================")
     board_pretty_printer(easy_board._covered_board)
-    print("RESULT IS " + easy_board._result)
+    print("COVERED COUNT IS " + str(easy_board._covered_cells_count))
+    print("=======================================")
+    print("SELECTING 1, 9")
+    print("=======================================")
+    easy_board.make_move(1, 9)
+    board_pretty_printer(easy_board._uncovered_board)
+    print("=======================================")
+    board_pretty_printer(easy_board._covered_board)
+    print("RESULT IS " + str(easy_board._result))
