@@ -59,7 +59,6 @@ def create_game():
             "total_columns": n_cols
         },
         "status": STATUS_ACTIVE,
-        "result": "",
         "started_at": str(datetime.now())
     }
     db = get_db()
