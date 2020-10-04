@@ -8,11 +8,11 @@ The base public URL for interacting with the server is the following: http://34.
 
 There are two main API categories:
 
-Games API, with documentation at [/docs/games.md](https://github.com/carlosrmd/minesweeper-app/blob/master/docs/games.md)
+* Games API, with documentation at [/docs/games.md](https://github.com/carlosrmd/minesweeper-app/blob/master/docs/games.md)
 
-Users API, with documentation at [/docs/users.md](https://github.com/carlosrmd/minesweeper-app/blob/master/docs/users.md)
+* Users API, with documentation at [/docs/users.md](https://github.com/carlosrmd/minesweeper-app/blob/master/docs/users.md)
 
-A common flow for a client's implementation would be the following:
+##### A common flow for a client's implementation would be the following:
 
 * Show the player the list of register users with endpoint `GET /users` 
 * Allow player to select one of those users or create a new one with endpoint `POST /users`
