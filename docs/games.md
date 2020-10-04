@@ -23,18 +23,6 @@ List games for existing user
 ]
 ```
 
-### Not found Response
-
-**Code** : `404 Not Found`
-
-**Response**
-
-
-```json
-{
-    "msg": "User not found"
-}
-```
 
 ## POST /games
 Create new game for existing user
