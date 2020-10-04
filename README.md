@@ -8,21 +8,23 @@ The base public URL for interacting with the server is the following: http://34.
 
 There are two main API categories:
 
-Games API, with documentation at [/docs/games.md](https://github.com/carlosrmd/minesweeper-app/blob/master/docs/games.md)
+* Games API, with documentation at [/docs/games.md](https://github.com/carlosrmd/minesweeper-app/blob/master/docs/games.md)
 
-Users API, with documentation at [/docs/users.md](https://github.com/carlosrmd/minesweeper-app/blob/master/docs/users.md)
+* Users API, with documentation at [/docs/users.md](https://github.com/carlosrmd/minesweeper-app/blob/master/docs/users.md)
 
-A common flow for a client's implementation would be the following:
+##### A common flow for a client's implementation would be the following:
 
-* Show the player the list of register users with endpoint `GET /users` 
+* Show the player the list of registered users with endpoint `GET /users` 
 * Allow player to select one of those users or create a new one with endpoint `POST /users`
-* Once player is identified, show the list of all games registered in the system associated with the selected user with endpoint `GET /games?user_id=:user_id`. The interface would be able to show the current status of those games (paused or finished). Finished games have information about how they ended (victory, game lost or finished by user) and it could be showed.
-* Allow player to select game to continue playing. The interface should not allow the user to select non-finished games since they can't be played and only works for history purposes.
+* Once player is identified, show the list of all games registered in the system associated with the player's selected user with endpoint `GET /games?user_id=:user_id`. The interface would be able to show the current status of those games (paused or finished). Finished games have information about how they ended (victory, game lost or finished by user) and total spent time, so it could be showed.
+* Allow player to select game to continue playing. The interface should not allow the user to select non-finished games since they can't be played and are there only for history purposes.
 * Allow player to start a new game with endpoint `POST /games` with number of rows, number of columns and amount of mines in the body request.
 * When a game is selected the interface can use the endpoint `GET /games/:game_id/state` to fetch the game's board and show it to the user.
 * Allow player to interact with selected game by perform actions on specific cells, such as click on them or flag them, with the help of endpoint `PUT /games/:game_id/:action` and (row, column) coordinates on body request. The response of mentioned endpoint will be the new state of the game with the updated board after the action taken.
 * Notice the player when its actions finish the game, like uncovering all non-mines cells or click on one mine cell.
 * Allow the player to pause the game and stop playing or manually end the game and go back to the game's list view.
+
+Library for integrating with Java minesweeper games projects: [minesweeper-client](https://github.com/carlosrmd/minesweeper-client)
 
 -------------------
 ## Implementation notes
