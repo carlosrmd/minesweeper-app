@@ -44,7 +44,7 @@ At first stage, new boards are represented as list of lists of integers, initial
 
 The solution was to implement algorithm `generate_board(rows: int, columns: int, mines: int)` and `generate_random_mines_coordinates(rows: int, columns: int, mines: int)`.
 
-The logic in random mines generation was to abstract the board as a enumeration of cells from `0` to `(rows * columns) - 1`, the following table shows this numeric representation of each cell, where the number between parenthesis is the enumeration each cell receives:
+The logic in random mines generation was to abstract the board as a enumeration of cells from `0` to `(rows * columns) - 1`, the following table shows this numeric representation of cells, where the number between parenthesis is the enumeration each cell receives:
 
 ||||
 |---|---|---|
@@ -52,7 +52,7 @@ The logic in random mines generation was to abstract the board as a enumeration 
 | 0 (3) | 0 (4) | 0 (5) |
 | 0 (6) | 0 (7) | 0 (8) |
 
-Next step is select as many distinct numbers as mines the board needs. Let's say the previous board need two mines, the `generate_random_mines_coordinates` would receive the parameters and randomly select number 3 and 7 from range `[0, 3*3-1]` and convert those numbers to (row, column) pair coordinates for the 4th and 8th mines in the board, which would be (1, 0) and (2, 1) in the board.
+Next step is select as many distinct numbers as mines the board needs. Let's say the previous board need two mines, the `generate_random_mines_coordinates` would receive the parameters and randomly select, for instance, number 3 and 7 from range `[0, 3*3-1]` and convert those numbers to (row, column) pair coordinates for the 4th and 8th mines in the board, which would be (1, 0) and (2, 1).
 
 ||||
 |---|---|---|
@@ -78,6 +78,30 @@ A fully covered board is a list of lists of asterisks. If the cell the player se
 
 The algorithm uses the dynamic programming technique [memoization](https://en.wikipedia.org/wiki/Memoization) in order to avoid method calls on already uncovered cells. The uncovering process is done in *O(total_cells)* time.
 
+The result algorithms looks like this in pseudo-python:
+
+```python
+def recursive_uncoverer(row, col):
+    memo.add(row, col)
+    selected_char = uncovered_board[row][col]
+    if selected_char == "0":
+        # Recursive case, keep uncovering
+        covered_board[row][col] = selected_char
+        for adj_r, adj_c in get_adjacents():
+            if (adj_r,adj_c) not in memo:
+                recursive_uncoverer(adj_r, adj_c)
+    else:
+        # Base case, no need to keep uncovering
+        covered_board[row][col] = selected_char
+        
+```
+
 ### Server deployment
 
-Server is deployed to GCP's [compute engine](https://cloud.google.com/compute) service.
+##### Current deployment
+
+Server is deployed to GCP's [compute engine](https://cloud.google.com/compute) service. Configured to use python's [uWSG](https://flask.palletsprojects.com/en/1.1.x/deploying/uwsgi/) as web server interface with [nginx](https://nginx.org/en/). MongoDB is running locally on the instance.
+
+##### Deployment alternatives
+
+A serverless solution would be using AWS [API Gateway](https://aws.amazon.com/api-gateway/), triggering [lambdas](https://aws.amazon.com/lambda/features/) that perform calls to a [DocumentDB](https://aws.amazon.com/documentdb/) instance, since all the operations the API currently performs are stateless.
