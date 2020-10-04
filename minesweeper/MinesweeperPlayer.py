@@ -43,6 +43,8 @@ class MinesweeperPlayer:
 
     def make_move(self, r, c):
         self._memo = {}
+        if self._covered_board[r][c] != "*":
+            return
         if self._uncovered_board[r][c] == 'X':
             self._covered_board[r][c] = 'X'
             self._result = RESULT_GAME_LOST
@@ -55,17 +57,17 @@ class MinesweeperPlayer:
 
     def _recursive_uncoverer(self, r, c):
         rc = "%s%s" % (r, c)
-        if rc not in self._memo:
-            self._memo[rc] = 1
-            selected_char = self._uncovered_board[r][c]
-            if selected_char == "0":
-                self._covered_board[r][c] = selected_char
-                self._covered_cells_count -= 1
-                for neighbor_r, neighbor_c in get_valid_neighbors(r, c, self._rows, self._columns):
+        self._memo[rc] = 1
+        selected_char = self._uncovered_board[r][c]
+        if selected_char == "0":
+            self._covered_board[r][c] = selected_char
+            self._covered_cells_count -= 1
+            for neighbor_r, neighbor_c in get_valid_neighbors(r, c, self._rows, self._columns):
+                if "%s%s" % (neighbor_r, neighbor_c) not in self._memo:
                     self._recursive_uncoverer(neighbor_r, neighbor_c)
-            else:
-                self._covered_board[r][c] = selected_char
-                self._covered_cells_count -= 1
+        else:
+            self._covered_board[r][c] = selected_char
+            self._covered_cells_count -= 1
 
 
 if __name__ == '__main__':
