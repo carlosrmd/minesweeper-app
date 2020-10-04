@@ -24,6 +24,8 @@ A common flow for a client's implementation would be the following:
 * Notice the player when its actions finish the game, like uncovering all non-mines cells or click on one mine cell.
 * Allow the player to pause the game and stop playing or manually end the game and go back to the game's list view.
 
+Library for integrating with Java minesweeper games projects: [minesweeper-client](https://github.com/carlosrmd/minesweeper-client)
+
 -------------------
 ## Implementation notes
 
