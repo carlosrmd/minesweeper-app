@@ -3,10 +3,7 @@ from flask import request, jsonify
 from datetime import datetime
 from minesweeper.db import get_db
 from minesweeper.utils import generate_board, generate_empty_board
-from minesweeper.constants import PAUSE_GAME, RESUME_GAME, END_GAME, MOVE, STATUS_ACTIVE, STATUS_FINISHED,\
-    STATUS_PAUSED, RESULT_FINISHED_BY_USER, MOVE_QUESTION_MARK,\
-    MOVE_CLICK, MOVE_RED_FLAG, flag_cell, MSG_COMMAND_UNRECOGNIZED, MSG_GAME_NOT_FOUND, MSG_MISSING_FIELDS,\
-    DATETIME_FORMAT
+from minesweeper.constants import *
 from minesweeper.MinesweeperPlayer import MinesweeperPlayer
 from bson import ObjectId
 from bson.errors import InvalidId
@@ -48,6 +45,13 @@ def create_game():
         user_name = content["user_name"]
     except KeyError:
         return {"msg": MSG_MISSING_FIELDS}, 400
+    db = get_db()
+
+    if db.users.find_one({"user_name": user_name}) is None:
+        return {"msg": MSG_USER_NOT_FOUND}, 404
+
+    if n_rows <= 0 or n_cols <= 0 or n_mines <= 0:
+        return {"msg": MSG_BAD_SIZES}, 400
 
     new_game = {
         "user_name": user_name,
@@ -62,7 +66,6 @@ def create_game():
         "status": STATUS_ACTIVE,
         "started_at": str(datetime.now())
     }
-    db = get_db()
     inserted = db.games.insert_one(new_game)
     return {"game_id": str(inserted.inserted_id), "board": new_game["board"]["covered_board"]}
 
