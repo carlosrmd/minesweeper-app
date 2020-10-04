@@ -16,8 +16,8 @@ def get_users():
     db = get_db()
     existing_users = []
     for user in db.users.find():
-        user['_id'] = str(user['_id'])
-        existing_users.append(user)
+        new_user = {'user_id': str(user['_id']), 'user_name': user['user_name']}
+        existing_users.append(new_user)
     return jsonify(existing_users)
 
 
