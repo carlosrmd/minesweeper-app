@@ -76,7 +76,7 @@ This algorithm generates the mines and insert them in the board in *O(total_mine
 
 ##### Uncovering cells
 
-A fully covered board is a list of lists of asterisks. If the cell the player selected for uncovering is not a mine, the algorithm `recursive_uncoverer(row: int, column: int)` will be called and will start replacing the asterisks for the actual vaules of the cell recursively. The base case is the uncovered cell is not the characer '0', the recursive case is the uncovered cell is a '0' and it will execute `recursive_uncoverer` for every adjacent cell.
+A fully covered board is a list of lists of asterisks. If the cell the player selected for uncovering is not a mine, the algorithm `recursive_uncoverer(row: int, column: int)` will be called and will start replacing the asterisks with the actual vaules of the cell recursively. The base case is the uncovered cell is not the characer '0', the recursive case is the uncovered cell is a '0' and it will execute `recursive_uncoverer` for every adjacent cell.
 
 The algorithm uses the dynamic programming technique [memoization](https://en.wikipedia.org/wiki/Memoization) in order to avoid method calls on already uncovered cells. The uncovering process is done in *O(total_cells)* time.
 
