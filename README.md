@@ -105,7 +105,7 @@ The recursive implementation was having Max recurssion problems while processing
 The iterative version in pseudo-python looks like this:
 
 ```python
-def recursive_uncoverer(row, col):
+def iterative_uncoverer(row, col):
     queue.add(row, col)
     memo.add(row, col)
     while queue.not_empty():
