@@ -83,7 +83,7 @@ Get state of existing game.
 
 ```json
 {
-    "board": ["string"],
+    "board": [["string"]],
     "status": "string",
     "result": "string"
 }
