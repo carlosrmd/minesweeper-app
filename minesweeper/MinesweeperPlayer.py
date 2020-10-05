@@ -50,7 +50,7 @@ class MinesweeperPlayer:
             self._result = RESULT_GAME_LOST
             self._total_time = (datetime.now() - self._started_at).total_seconds()
             return
-        self._recursive_uncoverer(r, c)
+        self._iterative_uncoverer(r, c)
         if self._covered_cells_count == self._mines_count:
             self._total_time = (datetime.now() - self._started_at).total_seconds()
             self._result = RESULT_GAME_VICTORY
@@ -68,3 +68,21 @@ class MinesweeperPlayer:
         else:
             self._covered_board[r][c] = selected_char
             self._covered_cells_count -= 1
+
+    def _iterative_uncoverer(self, r, c):
+        cell_queue = [(r, c)]
+        self._memo["%s-%s" % (r, c)] = 1
+        while cell_queue:
+            (current_r, current_c) = cell_queue.pop(0)
+            selected_char = self._uncovered_board[current_r][current_c]
+            if selected_char == "0":
+                self._covered_board[current_r][current_c] = selected_char
+                self._covered_cells_count -= 1
+                for neighbor_r, neighbor_c in get_valid_neighbors(current_r, current_c, self._rows, self._columns):
+                    if "%s-%s" % (neighbor_r, neighbor_c) not in self._memo:
+                        rc = "%s-%s" % (neighbor_r, neighbor_c)
+                        self._memo[rc] = 1
+                        cell_queue.append((neighbor_r, neighbor_c))
+            else:
+                self._covered_board[current_r][current_c] = selected_char
+                self._covered_cells_count -= 1
