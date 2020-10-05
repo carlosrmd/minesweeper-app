@@ -98,6 +98,29 @@ def recursive_uncoverer(row, col):
         
 ```
 
+##### UPDATE
+
+The recursive implementation was having Max recurssion problems while processing big boards (>10,000 cells) with few mines (lots of zeroes) so an iterative version was created and added to the `MinesweeperPlayer` class in order to avoid such problems. This version works similar but uses a queue approach to process cells and keeps the memoization to avoid repeating work.
+
+The iterative version in pseudo-python looks like this:
+
+```python
+def recursive_uncoverer(row, col):
+    queue.add(row, col)
+    memo.add(row, col)
+    while queue.not_empty():
+        current_row, current_col = queue.pop(0)
+        selected_char = uncovered_board[current_row][current_col]
+        if selected_char == "0":
+            covered_board[current_row][current_col] = selected_char
+            for adj_r, adj_c in get_adjacents():
+                if (adj_r,adj_c) not in memo:
+                    memo.add(adj_r, adj_c)
+                    queue.add(adj_r, adj_c)
+        else:
+            covered_board[current_row][current_col] = selected_char
+```
+
 ### Server deployment
 
 ##### Current deployment
