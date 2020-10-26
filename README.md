@@ -24,7 +24,7 @@ There are two main API categories:
 * Notice the player when its actions finish the game, like uncovering all non-mines cells or click on one mine cell.
 * Allow the player to pause the game and stop playing or manually end the game and go back to the game's list view.
 
-Library for integrating with Java minesweeper games projects: [minesweeper-client](https://github.com/carlosrmd/minesweeper-client)
+Library for integrating with Java minesweeper games projects: [minesweeper-client](https://github.com/carlosrmd/minesweeper-client) (under development)
 
 -------------------
 ## Implementation notes
@@ -62,7 +62,7 @@ Next step is select as many distinct numbers as mines the board needs. Let's say
 | 0<- | 0 | 0 |
 | 0 | 0<- | 0 |
 
-Method `generate_random_mines_coordinates` works as a python [generator](https://en.wikipedia.org/wiki/Generator_(computer_programming)) used by `generate_board` so at the same time it's generating the random coordinates, method `generate_board` is inserting the new mines in the board by marking it as a mine and incrementing by one the value of every non-mine adjacent cell.
+Method [generate_random_mines_coordinates](https://github.com/carlosrmd/minesweeper-app/blob/master/minesweeper/utils.py#L31) works as a python [generator](https://en.wikipedia.org/wiki/Generator_(computer_programming)) used by [generate_board](https://github.com/carlosrmd/minesweeper-app/blob/master/minesweeper/utils.py#L44) so at the same time it's generating the random coordinates, method `generate_board` is inserting the new mines in the board by marking it as a mine and incrementing by one the value of every non-mine adjacent cell.
 
 The result board would be:
 ||||
@@ -75,6 +75,9 @@ This algorithm generates the mines and insert them in the board in *O(total_mine
 
 
 ##### Uncovering cells
+
+
+###### Recursive version
 
 A fully covered board is a list of lists of asterisks. If the cell the player selected for uncovering is not a mine, the algorithm `recursive_uncoverer(row: int, column: int)` will be called and will start replacing the asterisks with the actual vaules of the cell recursively. The base case is the uncovered cell is not the characer '0', the recursive case is the uncovered cell is a '0' and it will execute `recursive_uncoverer` for every adjacent cell.
 
@@ -98,9 +101,11 @@ def recursive_uncoverer(row, col):
         
 ```
 
-##### UPDATE
+Actual implementation [here](https://github.com/carlosrmd/minesweeper-app/blob/master/minesweeper/MinesweeperPlayer.py#L58)
 
-The recursive implementation was having Max recurssion problems while processing big boards (>10,000 cells) with few mines (lots of zeroes) so an iterative version was created and added to the `MinesweeperPlayer` class in order to avoid such problems. This version works similar but uses a queue approach to process cells and keeps the memoization to avoid repeating work.
+###### Iterative version
+
+The recursive implementation is having Max recurssion problems while processing big boards (>10,000 cells) with few mines (lots of zeroes) so an iterative version was created and added to the `MinesweeperPlayer` class in order to avoid such problems. This version works similar but uses a queue approach to process cells and keeps the memoization to avoid repeating work.
 
 The iterative version in pseudo-python looks like this:
 
@@ -120,6 +125,8 @@ def iterative_uncoverer(row, col):
         else:
             covered_board[current_row][current_col] = selected_char
 ```
+
+Actual implementation [here](https://github.com/carlosrmd/minesweeper-app/blob/master/minesweeper/MinesweeperPlayer.py#L72)
 
 ### Server deployment
 
