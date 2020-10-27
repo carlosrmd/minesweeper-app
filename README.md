@@ -4,8 +4,6 @@
 
 Simple RESTful API server for the well-known minesweeper game. This server contains endpoints that allow clients create users, start games on behalf of some user and play the game. Games can be started, paused, resumed, played and finished.
 
-The base public URL for interacting with the server is the following: http://34.72.16.104
-
 There are two main API categories:
 
 * Games API, with documentation at [/docs/games.md](https://github.com/carlosrmd/minesweeper-app/blob/master/docs/games.md)
